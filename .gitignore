@@ -56,6 +56,9 @@ pip-log.txt
 *.mtc0
 latex/*.pdf
 posters/jl-tea/tex/*.pdf
+*.npy
+*.npz
+*.fig
 
 *~
 
