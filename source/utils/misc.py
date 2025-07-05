@@ -4,22 +4,24 @@ import numpy as np
 nax = np.newaxis
 # import Image
 from PIL import Image
-import mkl_hack
+from . import mkl_hack
 import scipy.linalg
 import scipy.stats
 import random
+import os
 
-def set_all_random_seeds(seed=0):
+def set_all_random_seeds(seed=1):
     random.seed(seed)
     np.random.seed(seed)
+    os.environ["PYTHONHASHSEED"] = str(seed)
 
-def sample_truncated_normal(loc=0, scale=1, min_value=-np.Inf):
+def sample_truncated_normal(loc=0, scale=1, min_value=-np.inf):
     '''Uses inverse cdf method - actually uses survival function sf = 1-cdf'''
     return scipy.stats.norm.isf(np.random.rand() * scipy.stats.norm.sf(min_value, loc=loc, scale=scale), loc=loc, scale=scale)
     
 def min_abs_diff(x):
     '''Minimum absolute difference between all pairs in an iterable'''
-    return min([abs(i - j) if (i != j) else np.Inf for i in x for j in x])
+    return min([abs(i - j) if (i != j) else np.inf for i in x for j in x])
 
 def _err_string(arr1, arr2):
     try:
@@ -73,7 +75,7 @@ def array_map(fn, arrs, n):
     
     full_shape = tuple(np.array([a.shape[:n] for a in arrs]).max(0))
     result = None
-    for full_idx in itertools.product(*map(range, full_shape)):
+    for full_idx in itertools.product(*list(map(range, full_shape))):
         inputs = [a[broadcast(full_idx, a.shape[:n]) + (Ellipsis,)] for a in arrs]
         curr = fn(*inputs)
         

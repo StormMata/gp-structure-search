@@ -23,11 +23,11 @@ class timeoutCommand(object):
     def run(self, timeout):
         def target():
             if self.verbose:
-                print 'Thread started'
+                print('Thread started')
             self.process = subprocess.Popen(self.cmd, shell=True)
             self.process.communicate()
             if self.verbose:
-                print 'Thread finished'
+                print('Thread finished')
 
         thread = threading.Thread(target=target)
         thread.start()
@@ -36,19 +36,19 @@ class timeoutCommand(object):
         
         if thread.is_alive():
             if self.verbose:
-                print 'Terminating process'
+                print('Terminating process')
             try:
                 #self.process.terminate()
                 proc.send_signal(signal.SIGINT)
                 proc.wait()                
                 thread.join()
                 if self.verbose:    
-                    print self.process.returncode                
+                    print(self.process.returncode)                
                 return (False, self.process.returncode)
             except:
-                print 'Could not terminate process - maybe there was a race'
+                print('Could not terminate process - maybe there was a race')
                 return (False, 0)
         else:
             if self.verbose:    
-                print self.process.returncode
+                print(self.process.returncode)
             return (True, self.process.returncode)

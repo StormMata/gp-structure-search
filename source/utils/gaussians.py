@@ -1,12 +1,12 @@
 import numpy as np
 nax = np.newaxis
 
-import psd_matrices
+from . import psd_matrices
 
 #from profiler import profiled
-import profiler
+from . import profiler
 profiled = profiler.profiled('gaussians')
-from misc import _err_string, process_slice, my_sum, match_shapes, dot, full_shape, broadcast, set_err_info, transp
+from .misc import _err_string, process_slice, my_sum, match_shapes, dot, full_shape, broadcast, set_err_info, transp
 
 
 class Potential():

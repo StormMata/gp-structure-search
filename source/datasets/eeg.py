@@ -27,7 +27,7 @@ def load_channel_locs(locs_file):
     angle in radians."""
     locs = []
     for line in open(locs_file):
-        phi, theta = map(float, line.strip().split())
+        phi, theta = list(map(float, line.strip().split()))
         locs.append((phi, theta))
     return np.array(locs)
 

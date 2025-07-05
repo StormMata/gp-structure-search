@@ -117,12 +117,12 @@ def expand_single_tree(kernel, grammar):
     result = []
     for lhs, rhs, types in grammar.rules:
         if grammar.type_matches(kernel, types[lhs]):
-            free_vars = types.keys()
+            free_vars = list(types.keys())
             assert lhs in free_vars
             free_vars.remove(lhs)
             choices = itertools.product(*[grammar.list_options(types[v]) for v in free_vars])
             for c in choices:
-                mapping = dict(zip(free_vars, c))
+                mapping = dict(list(zip(free_vars, c)))
                 mapping[lhs] = kernel
                 full_polish = replace_all(rhs, mapping)
                 result.append(polish_to_kernel(full_polish))
@@ -165,7 +165,8 @@ def canonical(kernel):
                 new_ops += op_canon.operands
             else:
                 new_ops.append(op_canon)
-        return fk.SumKernel(sorted(new_ops))
+        # return fk.SumKernel(sorted(new_ops))
+        return fk.SumKernel(sorted(new_ops, key=lambda k: str(k)))
     elif isinstance(kernel, fk.ProductKernel):
         new_ops = []
         for op in kernel.operands:
@@ -174,12 +175,14 @@ def canonical(kernel):
                 new_ops += op_canon.operands
             else:
                 new_ops.append(op_canon)
-        return fk.ProductKernel(sorted(new_ops))
+        # return fk.ProductKernel(sorted(new_ops))
+        return fk.ProductKernel(sorted(new_ops, key=lambda k: str(k)))
     else:
         raise RuntimeError('Unknown kernel class:', kernel.__class__)
 
 def remove_duplicates(kernels):
-    kernels = sorted(map(canonical, kernels))
+    kernels = sorted(map(canonical, kernels), key=lambda k: str(k))
+    # kernels = sorted(map(canonical, kernels))
     result = []
     curr = None
     for k in kernels:
@@ -192,17 +195,17 @@ def expand_kernels(D, seed_kernels, verbose=False, debug=False, base_kernels='SE
     '''Makes a list of all expansions of a set of kernels in D dimensions.'''
     g = MultiDGrammar(D, debug=debug, base_kernels=base_kernels)
     if verbose:
-        print 'Seed kernels :'
+        print('\nSeed kernels :')
         for k in seed_kernels:
-            print k.pretty_print()
+            print(k.pretty_print())
     kernels = []
     for k in seed_kernels:
         kernels = kernels + expand(k, g)
     kernels = remove_duplicates(kernels)
     if verbose:
-        print 'Expanded kernels :'
+        print('Expanded kernels :')
         for k in kernels:
-            print k.pretty_print()
+            print(k.pretty_print())
     return (kernels)
 
 

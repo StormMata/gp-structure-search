@@ -47,14 +47,14 @@ import random
 
 def kernel_test():
     k = fk.MaskKernel(4, 3, fk.SqExpKernel(0, 0))
-    print k.gpml_kernel_expression()
-    print k.pretty_print()
-    print '[%s]' % k.param_vector()
-    print 'kernel_test complete'
+    print(k.gpml_kernel_expression())
+    print(k.pretty_print())
+    print('[%s]' % k.param_vector())
+    print('kernel_test complete')
     
 def base_kernel_test():
-    print [k.pretty_print() for k in fk.base_kernels(1)]
-    print 'base_kernel_test complete'
+    print([k.pretty_print() for k in fk.base_kernels(1)])
+    print('base_kernel_test complete')
     
 def expand_test():  
     k1 = fk.SqExpKernel(1, 1)
@@ -63,24 +63,24 @@ def expand_test():
     
     g = grammar.OneDGrammar()
     
-    print ''
+    print('')
     for f in grammar.expand(e, g):
         #print f
-        print f.pretty_print()
-        print grammar.canonical(f).pretty_print()
-        print
+        print(f.pretty_print())
+        print(grammar.canonical(f).pretty_print())
+        print()
         
-    print '   ***** duplicates removed  *****'
-    print
+    print('   ***** duplicates removed  *****')
+    print()
     
     kernels = grammar.expand(e, g)
     for f in grammar.remove_duplicates(kernels):
-        print f.pretty_print()
-        print
+        print(f.pretty_print())
+        print()
         
-    print '%d originally, %d without duplicates' % (len(kernels), len(grammar.remove_duplicates(kernels)))
+    print('%d originally, %d without duplicates' % (len(kernels), len(grammar.remove_duplicates(kernels))))
         
-    print 'expand_test complete'
+    print('expand_test complete')
     
 def expand_test2():    
     k1 = fk.MaskKernel(2, 0, fk.SqExpKernel(1, 1))
@@ -89,23 +89,23 @@ def expand_test2():
     
     g = grammar.MultiDGrammar(2)
     
-    print ''
+    print('')
     for f in grammar.expand(e, g):
-        print f.pretty_print()
-        print grammar.canonical(f).pretty_print()
-        print
+        print(f.pretty_print())
+        print(grammar.canonical(f).pretty_print())
+        print()
         
-    print '   ***** duplicates removed  *****'
-    print
+    print('   ***** duplicates removed  *****')
+    print()
     
     kernels = grammar.expand(e, g)
     for f in grammar.remove_duplicates(kernels):
-        print f.pretty_print()
-        print
+        print(f.pretty_print())
+        print()
         
-    print '%d originally, %d without duplicates' % (len(kernels), len(grammar.remove_duplicates(kernels)))
+    print('%d originally, %d without duplicates' % (len(kernels), len(grammar.remove_duplicates(kernels))))
         
-    print 'expand_test complete'
+    print('expand_test complete')
     
 
 def load_mauna():
@@ -131,9 +131,9 @@ def call_gpml_test():
     np.random.seed(0)
     
     k = fk.SumKernel([fk.SqExpKernel(0, 0), fk.SqExpKernel(0, 0)])
-    print k.gpml_kernel_expression()
-    print k.pretty_print()
-    print '[%s]' % k.param_vector()
+    print(k.gpml_kernel_expression())
+    print(k.pretty_print())
+    print('[%s]' % k.param_vector())
 
     X, y = load_mauna()
     
@@ -149,27 +149,27 @@ def call_gpml_test():
         #kernel_hypers, nll, nlls = gpml.optimize_params(k.gpml_kernel_expression(), k.param_vector(), X, y, return_all=True)
         kernel_hypers, nll, nlls = gpml.optimize_params(k.gpml_kernel_expression(), init_params, X, y, return_all=True)
     
-        print "kernel_hypers =", kernel_hypers
-        print "nll =", nll
+        print("kernel_hypers =", kernel_hypers)
+        print("nll =", nll)
         
         k_opt = k.family().from_param_vector(kernel_hypers)
-        print k_opt.gpml_kernel_expression()
-        print k_opt.pretty_print()
-        print '[%s]' % k_opt.param_vector()
+        print(k_opt.gpml_kernel_expression())
+        print(k_opt.pretty_print())
+        print('[%s]' % k_opt.param_vector())
         
-        pylab.semilogx(range(1, nlls.size+1), nlls)
+        pylab.semilogx(list(range(1, nlls.size+1)), nlls)
         
         results.append((kernel_hypers, nll))
         
         pylab.draw()
     
-    print
-    print
+    print()
+    print()
     results = sorted(results, key=lambda p: p[1])
     for kernel_hypers, nll in results:
-        print nll, kernel_hypers
+        print(nll, kernel_hypers)
         
-    print "done"
+    print("done")
         
 
 
@@ -216,22 +216,22 @@ def compare_kernels_experiment():
     X = X[:N_orig//5, :]
     y = y[:N_orig//5, :]     
      
-    print "Carl's kernel"
-    print kernel1.pretty_print()
+    print("Carl's kernel")
+    print(kernel1.pretty_print())
     kernel_hypers1, nll1 = gpml.optimize_params(kernel1.gpml_kernel_expression(), kernel1.param_vector(), \
                                                 X, y, noise=np.log(0.19), iters=100 )
     k1_opt = kernel1.family().from_param_vector(kernel_hypers1)
-    print k1_opt.pretty_print()   
-    print "Carl's NLL =", nll1 
+    print(k1_opt.pretty_print())   
+    print("Carl's NLL =", nll1) 
     
-    print "Our kernel"
-    print kernel2.pretty_print()
+    print("Our kernel")
+    print(kernel2.pretty_print())
     kernel_hypers2, nll2 = gpml.optimize_params(kernel2.gpml_kernel_expression(), kernel2.param_vector(), \
                                                 X, y, noise=np.log(0.19), iters=100)
     k2_opt = kernel2.family().from_param_vector(kernel_hypers2)
-    print k2_opt.pretty_print()            
+    print(k2_opt.pretty_print())            
 
-    print "Our NLL =", nll2
+    print("Our NLL =", nll2)
     
          
 
@@ -255,10 +255,10 @@ def simple_mauna_experiment():
         new_results = structure_search.try_expanded_kernels(X, y, D=2, seed_kernels=seed_kernels, verbose=False)
         results = results + new_results
         
-        print
+        print()
         results = sorted(results, key=lambda p: p[nll_key], reverse=True)
         for kernel, nll, laplace in results:
-            print nll, laplace, kernel.pretty_print()
+            print(nll, laplace, kernel.pretty_print())
             
         seed_kernels = [r[0] for r in sorted(new_results, key=lambda p: p[nll_key])[0:k]]
 
@@ -322,10 +322,10 @@ def simple_gef_load_experiment(verbose=True):
         new_results = structure_search.try_expanded_kernels(X, y, D=2, seed_kernels=seed_kernels, verbose=verbose)
         results = results + new_results
         
-        print
+        print()
         results = sorted(results, key=lambda p: p[active_key], reverse=True)
         for kernel, nll, BIC in results:
-            print nll, BIC, kernel.pretty_print()
+            print(nll, BIC, kernel.pretty_print())
             
         seed_kernels = [r[0] for r in sorted(new_results, key=lambda p: p[active_key])[0:k]] 
     
@@ -360,10 +360,10 @@ def full_gef_load_experiment(zone=1, max_depth=5, verbose=True):
         new_results = structure_search.try_expanded_kernels(X, y, D=12, seed_kernels=seed_kernels, expand=expand, verbose=verbose)
         results = results + new_results
         
-        print
+        print()
         results = sorted(results, key=lambda p: p[active_key], reverse=True)
         for kernel, nll, BIC in results:
-            print nll, BIC, kernel.pretty_print()
+            print(nll, BIC, kernel.pretty_print())
             
         seed_kernels = [r[0] for r in sorted(new_results, key=lambda p: p[active_key])[0:k]]
         
@@ -472,7 +472,7 @@ def qsub_matlab_code(code, verbose=True, local_dir ='../temp/', remote_dir ='./t
                             'cd ..'])
 
     if verbose:
-        print 'Submitting : %s' % fear_string
+        print('Submitting : %s' % fear_string)
     
     # Send this command to fear
     
@@ -495,7 +495,7 @@ def re_qsub(shell_file, verbose=True, fear=None):
                             'cd ..'])
 
     if verbose:
-        print 'Re-submitting : %s' % fear_string
+        print('Re-submitting : %s' % fear_string)
     
     # Send this command to fear
     
@@ -638,13 +638,13 @@ def fear_run_experiments(kernels, X, y, return_all=False, verbose=True, noise=No
                     os.remove(shell_files[i])
                     # Tell the world
                     if verbose:
-                        print '%d / %d jobs complete' % (sum(job_finished), len(job_finished))
+                        print('%d / %d jobs complete' % (sum(job_finished), len(job_finished)))
         
         if sum(job_finished) == len(job_finished):
             fear_finished = True    
         if not fear_finished:
             if verbose:
-                print 'Sleeping'
+                print('Sleeping')
             sleep_count += 1
             if sleep_count < n_sleep_timeout:
                 time.sleep(sleep_time)
@@ -655,7 +655,7 @@ def fear_run_experiments(kernels, X, y, return_all=False, verbose=True, noise=No
                     if not job_finished[i]:
                         re_qsub(shell_file, verbose=verbose, fear=fear)
                 if verbose:
-                    print 'Giving the jobs some time to run'
+                    print('Giving the jobs some time to run')
                 time.sleep(re_submit_wait)
                 sleep_count = 0
             
@@ -674,16 +674,16 @@ def fear_expand_kernels(D, seed_kernels, verbose=False):
     '''
        
     g = grammar.MultiDGrammar(D)
-    print 'Seed kernels :'
+    print('Seed kernels :')
     for k in seed_kernels:
-        print k.pretty_print()
+        print(k.pretty_print())
     kernels = []
     for k in seed_kernels:
         kernels = kernels + grammar.expand(k, g)
     kernels = grammar.remove_duplicates(kernels)
-    print 'Expanded kernels :'
+    print('Expanded kernels :')
     for k in kernels:
-        print k.pretty_print()
+        print(k.pretty_print())
             
     return (kernels)
 
@@ -721,10 +721,10 @@ def fear_experiment(data_file, results_filename, y_dim=1, subset=None, max_depth
             
         results = results + new_results
         
-        print
+        print()
         results = sorted(results, key=lambda p: p[active_key], reverse=True)
         for kernel, nll, laplace, BIC in results:
-            print nll, laplace, BIC, kernel.pretty_print()
+            print(nll, laplace, BIC, kernel.pretty_print())
             
         seed_kernels = [r[0] for r in sorted(new_results, key=lambda p: p[active_key])[0:k]]
         
@@ -992,8 +992,8 @@ def debug_laplace():
     # Read in results
     output = gpml.read_outputs(output_file)
     result = ScoredKernel.from_matlab_output(output, sk.k_opt.family(), ndata)
-    print result
-    print output.hessian
+    print(result)
+    print(output.hessian)
     
     os.remove(output_file)
     # Remove temporary data file (perhaps on the cluster server)

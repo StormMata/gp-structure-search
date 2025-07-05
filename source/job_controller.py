@@ -17,7 +17,7 @@ import utils.fear
 try:
     from config import *
 except:
-    print '\n\nERROR : source/config.py not found\n\nPlease create it following example file as a guide\n\n'
+    print('\n\nERROR : source/config.py not found\n\nPlease create it following example file as a guide\n\n')
     raise Exception('No config')
 from utils import gaussians, psd_matrices
 
@@ -57,7 +57,7 @@ def covariance_distance(kernels, X, local_computation=True, verbose=True):
     # Copy onto cluster server if necessary
     if not local_computation:
         if verbose:
-            print 'Moving data file to fear'
+            print('Moving data file to fear')
         cblparallel.copy_to_remote(data_file)
     # Construct testing code
     code = gpml.DISTANCE_CODE_HEADER % {'datafile': data_file.split('/')[-1],
@@ -106,19 +106,19 @@ def evaluate_kernels(kernels, X, y, verbose=True, noise=None, iters=300, local_c
     
     # Create data file
     if verbose:
-        print 'Creating data file locally'
+        print('Creating data file locally')
     data_file = cblparallel.create_temp_file('.mat')
     scipy.io.savemat(data_file, {'X': X, 'y': y}) # Save regression data
     
     # Move to fear if necessary
     if not local_computation:
         if verbose:
-            print 'Moving data file to fear'
+            print('Moving data file to fear')
         cblparallel.copy_to_remote(data_file)
     
     # Create a list of MATLAB scripts to assess and optimise parameters for each kernel
     if verbose:
-        print 'Creating scripts'
+        print('Creating scripts')
     scripts = [None] * len(kernels)
     for (i, kernel) in enumerate(kernels):
         parameters = {'datafile': data_file.split('/')[-1],
@@ -136,10 +136,15 @@ def evaluate_kernels(kernels, X, y, verbose=True, noise=None, iters=300, local_c
         #### Need to be careful with % signs
         #### For the moment, cblparallel expects no single % signs - FIXME
         scripts[i] = re.sub('% ', '%% ', scripts[i])
-    
+
+        # print(f"\n--- Script {i+1} / {len(kernels)} ---")
+        # print("Kernel:", kernel.pretty_print())
+        # print("Param vector:", kernel.param_vector())
+        # print("Generated MATLAB script:\n", scripts[i])
+
     # Send to cblparallel and save output_files
     if verbose:
-        print 'Sending scripts to cblparallel'
+        print('Sending scripts to cblparallel')
     if local_computation:
         output_files = cblparallel.run_batch_locally(scripts, language='matlab', max_cpu=1.1, job_check_sleep=5, submit_sleep=0.1, max_running_jobs=10, verbose=verbose)  
     else:
@@ -149,16 +154,16 @@ def evaluate_kernels(kernels, X, y, verbose=True, noise=None, iters=300, local_c
     results = [None] * len(kernels)
     for (i, output_file) in enumerate(output_files):
         if verbose:
-            print 'Reading output file %d of %d' % (i + 1, len(kernels))
+            print('Reading output file %d of %d' % (i + 1, len(kernels)))
         results[i] = ScoredKernel.from_matlab_output(gpml.read_outputs(output_file), kernels[i].family(), ndata)
     
     # Tidy up local output files
     for (i, output_file) in enumerate(output_files):
         if verbose:
-            print 'Removing output file %d of %d' % (i + 1, len(kernels)) 
-        os.remove(output_file)
+            print('Removing output file %d of %d' % (i + 1, len(kernels))) 
+        # os.remove(output_file)
     # Remove temporary data file (perhaps on the cluster server)
-    cblparallel.remove_temp_file(data_file, local_computation)
+    # cblparallel.remove_temp_file(data_file, local_computation)
     
     # Return results i.e. list of ScoredKernel objects
     return results     
@@ -192,7 +197,7 @@ def make_predictions(X, y, Xtest, ytest, best_scored_kernel, local_computation=F
     # Copy onto cluster server if necessary
     if not local_computation:
         if verbose:
-            print 'Moving data file to fear'
+            print('Moving data file to fear')
         cblparallel.copy_to_remote(data_file)
     # Create prediction code
     parameters ={'datafile': data_file.split('/')[-1],

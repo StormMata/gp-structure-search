@@ -1,4 +1,4 @@
-import cPickle
+import pickle
 import numpy as np
 nax = np.newaxis
 import os
@@ -91,19 +91,19 @@ def perform_search(X, y, scheduler, max_depth, params, verbose=False, output_fna
     scored_kernels_by_level = []
     for depth in range(max_depth):
         if verbose:
-            print 'Level', depth + 1
+            print('Level', depth + 1)
         current_kernels = flexiblekernel.add_random_restarts(current_kernels, params.n_restarts,
                                                              params.restart_std)
 
         if verbose:
-            print 'Evaluating kernels...'
+            print('Evaluating kernels...')
         scored_kernels = scheduler.evaluate_kernels(current_kernels, X, y)
 
         scored_kernels = remove_nan_scored_kernels(scored_kernels)
         scored_kernels.sort(key=flexiblekernel.ScoredKernel.score)
         scored_kernels = scored_kernels[:params.num_winners]
         if verbose:
-            print 'Removing duplicates...'
+            print('Removing duplicates...')
         scored_kernels = remove_duplicates(scored_kernels, X, params.num_subsample, params.proj_dim,
                                            params.rel_cutoff)
         scored_kernels.sort(key=flexiblekernel.ScoredKernel.score)
@@ -116,9 +116,9 @@ def perform_search(X, y, scheduler, max_depth, params, verbose=False, output_fna
 
         if output_fname_fn is not None:
             if verbose:
-                print 'Saving results...'
+                print('Saving results...')
             fname = output_fname_fn(depth)
-            cPickle.dump(current_kernels, open(fname, 'wb'), protocol=2)
+            pickle.dump(current_kernels, open(fname, 'wb'), protocol=2)
 
     all_scored_kernels.sort(key=flexiblekernel.ScoredKernel.score)
     return all_scored_kernels, scored_kernels_by_level

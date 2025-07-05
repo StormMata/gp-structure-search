@@ -19,7 +19,7 @@ def _status_file(key, host=None):
 def _run_job(script, key, args):
     if key != 'None':
         outstr = open(_status_file(key, socket.gethostname()), 'a')
-        print >> outstr, 'running:', args
+        print('running:', args, file=outstr)
         outstr.close()
         
     ret = subprocess.call('python %s %s' % (script, args), shell=True)
@@ -27,9 +27,9 @@ def _run_job(script, key, args):
     if key != 'None':
         outstr = open(_status_file(key, socket.gethostname()), 'a')
         if ret == 0:
-            print >> outstr, 'finished:', args
+            print('finished:', args, file=outstr)
         else:
-            print >> outstr, 'failed:', args
+            print('failed:', args, file=outstr)
         outstr.close()
 
     
@@ -54,7 +54,7 @@ def run(script, jobs, machines=None, key=None, email=True, rm_status=True):
             
         outstr = open(_status_file(key), 'w')
         for job in jobs:
-            print >> outstr, 'queued:', job
+            print('queued:', job, file=outstr)
         outstr.close()
 
         if rm_status:
@@ -119,7 +119,7 @@ def list_jobs(key, status_val):
             args = args.strip()
             status[args] = sv
 
-    return [k for k, v in status.items() if v == status_val]
+    return [k for k, v in list(status.items()) if v == status_val]
 
 
 if __name__ == '__main__':

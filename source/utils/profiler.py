@@ -58,15 +58,15 @@ class profiled:
 def summarize(category, cutoff=0.5, outstr=sys.stdout):
     tt = total_time[category]
     c = counts[category]
-    srtd = sorted(tt.keys(), key=lambda k: tt[k], reverse=True)
+    srtd = sorted(list(tt.keys()), key=lambda k: tt[k], reverse=True)
     for k in srtd:
         if tt[k] < cutoff:
             continue
-        print >> outstr, '%1.2f seconds for %d calls' % (tt[k], c[k])
-        print >> outstr, k[0]
+        print('%1.2f seconds for %d calls' % (tt[k], c[k]), file=outstr)
+        print(k[0], file=outstr)
         for tp, sz in k[1:]:
-            print >> outstr, '    %s %s' % (tp, sz)
-        print >> outstr
+            print('    %s %s' % (tp, sz), file=outstr)
+        print(file=outstr)
 
 
     

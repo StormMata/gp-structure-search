@@ -174,14 +174,19 @@ class SqExpKernel(BaseKernel):
         if cmp(self.__class__, other.__class__):
             return cmp(self.__class__, other.__class__)
         differences = [self.lengthscale - other.lengthscale, self.output_variance - other.output_variance]
-        differences = map(shrink_below_tolerance, differences)
+        differences = list(map(shrink_below_tolerance, differences))
         return cmp(differences, [0] * len(differences))
     
     def depth(self):
         return 0
             
     def out_of_bounds(self, constraints):
-        return self.lengthscale < constraints['min_lengthscale']
+        # return self.lengthscale < constraints['min_lengthscale']
+        min_len = constraints.get('min_lengthscale')
+        if min_len is not None:
+            return self.lengthscale < min_len
+        else:
+            return False
 
 
 class SqExpPeriodicKernelFamily(BaseKernelFamily):
@@ -300,7 +305,7 @@ class SqExpPeriodicKernel(BaseKernel):
         if cmp(self.__class__, other.__class__):
             return cmp(self.__class__, other.__class__)
         differences = [self.lengthscale - other.lengthscale, self.period - other.period, self.output_variance - other.output_variance]
-        differences = map(shrink_below_tolerance, differences)
+        differences = list(map(shrink_below_tolerance, differences))
         return cmp(differences, [0] * len(differences))
 #        max_diff = max(np.abs([self.lengthscale - other.lengthscale, self.period - other.period, self.output_variance - other.output_variance]))
 #        return max_diff > CMP_TOLERANCE
@@ -311,7 +316,11 @@ class SqExpPeriodicKernel(BaseKernel):
         return 0
             
     def out_of_bounds(self, constraints):
-        return (self.period < constraints['min_period']) or (self.lengthscale < constraints['min_lengthscale'])
+        # return (self.period < constraints['min_period']) or (self.lengthscale < constraints['min_lengthscale'])
+        return (
+            (constraints.get('min_period') is not None and self.period < constraints['min_period']) or
+            (constraints.get('min_lengthscale') is not None and self.lengthscale < constraints['min_lengthscale'])
+        )
     
 
 class RQKernelFamily(BaseKernelFamily):
@@ -411,7 +420,7 @@ class RQKernel(BaseKernel):
         if cmp(self.__class__, other.__class__):
             return cmp(self.__class__, other.__class__)
         differences = [self.lengthscale - other.lengthscale, self.output_variance - other.output_variance, self.alpha - other.alpha]
-        differences = map(shrink_below_tolerance, differences)
+        differences = list(map(shrink_below_tolerance, differences))
         return cmp(differences, [0] * len(differences))
 #        max_diff = max(np.abs([self.lengthscale - other.lengthscale, self.output_variance - other.output_variance, self.alpha - other.alpha]))
 #        return max_diff > CMP_TOLERANCE
@@ -508,7 +517,7 @@ class ConstKernel(BaseKernel):
         if cmp(self.__class__, other.__class__):
             return cmp(self.__class__, other.__class__)
         differences = [self.output_variance - other.output_variance]
-        differences = map(shrink_below_tolerance, differences)
+        differences = list(map(shrink_below_tolerance, differences))
         return cmp(differences, [0] * len(differences))
 #        max_diff = max(np.abs([self.output_variance - other.output_variance]))
 #        return max_diff > CMP_TOLERANCE
@@ -615,7 +624,7 @@ class LinKernel(BaseKernel):
         if cmp(self.__class__, other.__class__):
             return cmp(self.__class__, other.__class__)
         differences = [self.offset - other.offset, self.lengthscale - other.lengthscale, self.location - other.location]
-        differences = map(shrink_below_tolerance, differences)
+        differences = list(map(shrink_below_tolerance, differences))
         return cmp(differences, [0] * len(differences))
 #        max_diff = max(np.abs([self.lengthscale - other.lengthscale]))
 #        return max_diff > CMP_TOLERANCE
@@ -701,7 +710,7 @@ class QuadraticKernel(BaseKernel):
         if cmp(self.__class__, other.__class__):
             return cmp(self.__class__, other.__class__)
         differences = [self.offset - other.offset, self.output_variance - other.output_variance]
-        differences = map(shrink_below_tolerance, differences)
+        differences = list(map(shrink_below_tolerance, differences))
         return cmp(differences, [0] * len(differences))
 #        max_diff = max(np.abs([self.offset - other.offset, self.output_variance - other.output_variance]))
 #        return max_diff > CMP_TOLERANCE
@@ -787,7 +796,7 @@ class CubicKernel(BaseKernel):
         if cmp(self.__class__, other.__class__):
             return cmp(self.__class__, other.__class__)
         differences = [self.offset - other.offset, self.output_variance - other.output_variance]
-        differences = map(shrink_below_tolerance, differences)
+        differences = list(map(shrink_below_tolerance, differences))
         return cmp(differences, [0] * len(differences))
 #        max_diff = max(np.abs([self.offset - other.offset, self.output_variance - other.output_variance]))
 #        return max_diff > CMP_TOLERANCE
@@ -888,7 +897,7 @@ class PP0Kernel(BaseKernel):
         if cmp(self.__class__, other.__class__):
             return cmp(self.__class__, other.__class__)
         differences = [self.lengthscale - other.lengthscale, self.output_variance - other.output_variance]
-        differences = map(shrink_below_tolerance, differences)
+        differences = list(map(shrink_below_tolerance, differences))
         return cmp(differences, [0] * len(differences))
 #        max_diff = max(np.abs([self.lengthscale - other.lengthscale, self.output_variance - other.output_variance]))
 #        return max_diff > CMP_TOLERANCE
@@ -991,7 +1000,7 @@ class PP1Kernel(BaseKernel):
         if cmp(self.__class__, other.__class__):
             return cmp(self.__class__, other.__class__)
         differences = [self.lengthscale - other.lengthscale, self.output_variance - other.output_variance]
-        differences = map(shrink_below_tolerance, differences)
+        differences = list(map(shrink_below_tolerance, differences))
         return cmp(differences, [0] * len(differences))
 #        max_diff = max(np.abs([self.lengthscale - other.lengthscale, self.output_variance - other.output_variance]))
 #        return max_diff > CMP_TOLERANCE
@@ -1094,7 +1103,7 @@ class PP2Kernel(BaseKernel):
         if cmp(self.__class__, other.__class__):
             return cmp(self.__class__, other.__class__)
         differences = [self.lengthscale - other.lengthscale, self.output_variance - other.output_variance]
-        differences = map(shrink_below_tolerance, differences)
+        differences = list(map(shrink_below_tolerance, differences))
         return cmp(differences, [0] * len(differences))
 #        max_diff = max(np.abs([self.lengthscale - other.lengthscale, self.output_variance - other.output_variance]))
 #        return max_diff > CMP_TOLERANCE
@@ -1197,7 +1206,7 @@ class PP3Kernel(BaseKernel):
         if cmp(self.__class__, other.__class__):
             return cmp(self.__class__, other.__class__)
         differences = [self.lengthscale - other.lengthscale, self.output_variance - other.output_variance]
-        differences = map(shrink_below_tolerance, differences)
+        differences = list(map(shrink_below_tolerance, differences))
         return cmp(differences, [0] * len(differences))
 #        max_diff = max(np.abs([self.lengthscale - other.lengthscale, self.output_variance - other.output_variance]))
 #        return max_diff > CMP_TOLERANCE
@@ -1299,7 +1308,7 @@ class MaternKernel(BaseKernel):
         if cmp(self.__class__, other.__class__):
             return cmp(self.__class__, other.__class__)
         differences = [self.lengthscale - other.lengthscale, self.output_variance - other.output_variance]
-        differences = map(shrink_below_tolerance, differences)
+        differences = list(map(shrink_below_tolerance, differences))
         return cmp(differences, [0] * len(differences))
 #        max_diff = max(np.abs([self.lengthscale - other.lengthscale, self.output_variance - other.output_variance]))
 #        return max_diff > CMP_TOLERANCE
@@ -1399,7 +1408,7 @@ class ChangeKernel(BaseKernel):
         if cmp(self.__class__, other.__class__):
             return cmp(self.__class__, other.__class__)
         differences = [self.steepness - other.steepness, self.location - other.location]
-        differences = map(shrink_below_tolerance, differences)
+        differences = list(map(shrink_below_tolerance, differences))
         return cmp(differences, [0] * len(differences))
     
     def depth(self):
@@ -1908,7 +1917,7 @@ def replace_defaults(param_vector, sd):
 def add_random_restarts_single_kernel(kernel, n_rand, sd, data_shape):
     '''Returns a list of kernels with random restarts for default values'''
     #return [kernel] + list(itertools.repeat(kernel.family().from_param_vector(replace_defaults(kernel.param_vector(), sd)), n_rand))
-    return [kernel] + list(map(lambda unused : kernel.family().from_param_vector(kernel.default_params_replaced(sd=sd, data_shape=data_shape)), [None] * n_rand))
+    return [kernel] + list([kernel.family().from_param_vector(kernel.default_params_replaced(sd=sd, data_shape=data_shape)) for unused in [None] * n_rand])
 
 def add_random_restarts(kernels, n_rand=1, sd=4, data_shape=None):    
     '''Augments the list to include random restarts of all default value parameters'''

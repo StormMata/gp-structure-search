@@ -1,2 +1,2 @@
-import matlab
-import util
+from . import matlab
+from . import util

@@ -27,7 +27,7 @@ for filename in os.listdir('.'):
                 value = line.split(',')[-1]
                 output_file.write('%f,%s' % (time_value, value))
             except:
-                print 'Warning : could not parse %s' % line.rstrip()
+                print('Warning : could not parse %s' % line.rstrip())
             
         input_file.close()
         output_file.close()

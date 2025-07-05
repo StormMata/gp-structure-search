@@ -6,7 +6,7 @@ def data_file():
 def load_data(fname):
     result = []
     for line in open(fname):
-        values = map(float, line.strip().split())
+        values = list(map(float, line.strip().split()))
         result += values
     return np.array(result)
 

@@ -102,7 +102,7 @@ def make_predictions(kernel, X, y, Xtest, ytest):
     output_file = mp.util.create_temp_file('.mat')
 
     code = make_predictions_code(kernel, data_file, output_file)
-    print code
+    print(code)
     assert False  # haven't tested yet, make sure code is reasonable
     mp.matlab.run(code)
 

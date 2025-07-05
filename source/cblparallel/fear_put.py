@@ -4,7 +4,7 @@ To be used as a subprocess to prevent errors messing up main thread
 '''
 
 import sys
-import pyfear
+from . import pyfear
 
 localpath = sys.argv[1]
 remotepath = sys.argv[2]

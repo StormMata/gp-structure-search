@@ -9,7 +9,7 @@ Created Jan 2013
 '''
 
 from collections import namedtuple
-from itertools import izip
+
 import numpy as np
 nax = np.newaxis
 import os
@@ -71,6 +71,15 @@ def perform_kernel_search(X, y, D, experiment_data_file_name, results_filename, 
 
     # Initialise kernels to be all base kernels along all dimensions.
     current_kernels = list(fk.base_kernels(D, exp.base_kernels))
+
+    print("\n----------------------------")
+    print(f"Initial base kernels: {len(current_kernels)}")
+
+    print("\nBase kernel input string:", exp.base_kernels)
+    print("\nBase kernels generated:")
+    for k in current_kernels:
+        print(" ", k.pretty_print())
+    print("Total base kernels:", len(current_kernels))
     
     # Create location, scale and minimum period parameters to pass around for initialisations
     data_shape = {}
@@ -96,7 +105,9 @@ def perform_kernel_search(X, y, D, experiment_data_file_name, results_filename, 
     
     # Perform search
     for depth in range(exp.max_depth):
-        
+        print(f"\n--- Depth {depth} ---")
+        print(f"Current kernels to score: {len(current_kernels)}")
+
         if exp.debug==True:
             current_kernels = current_kernels[0:4]
              
@@ -111,31 +122,32 @@ def perform_kernel_search(X, y, D, experiment_data_file_name, results_filename, 
             new_results = [sk for sk in new_results if not sk.k_opt.out_of_bounds(data_shape)]
         # Some of the scores may have failed - remove nans to prevent sorting algorithms messing up
         new_results = remove_nan_scored_kernels(new_results)
+        print(f"\nNew results after scoring: {len(new_results)}")
         assert(len(new_results) > 0) # FIXME - Need correct control flow if this happens 
         # Sort the new all_results
         new_results = sorted(new_results, key=ScoredKernel.score, reverse=True)
         
-        print 'All new results:'
+        print('All new results:')
         for result in new_results:
-            print result.nll, result.laplace_nle, result.bic_nle, result.k_opt.pretty_print()
+            print(result.nll, result.laplace_nle, result.bic_nle, result.k_opt.pretty_print())
             
         # Remove near duplicates from these all_results (top m all_results only for efficiency)
         if exp.k > 1:
             # Only remove duplicates if they affect the search
             new_results = remove_duplicates(new_results, X, local_computation=exp.local_computation, verbose=exp.verbose)
 
-        print 'All new results after duplicate removal:'
+        print('\nAll new results after duplicate removal:')
         for result in new_results:
-            print result.nll, result.laplace_nle, result.bic_nle, result.k_opt.pretty_print()
+            print(result.nll, result.laplace_nle, result.bic_nle, result.k_opt.pretty_print())
 
         all_results = all_results + new_results
         all_results = sorted(all_results, key=ScoredKernel.score, reverse=True)
 
         results_sequence.append(all_results)
         if exp.verbose:
-            print 'Printing all results'
+            print('\nPrinting all results')
             for result in all_results:
-                print result.nll, result.laplace_nle, result.bic_nle, result.k_opt.pretty_print()
+                print(result.nll, result.laplace_nle, result.bic_nle, result.k_opt.pretty_print())
         
         # Extract the best k kernels from the new all_results
         best_results = sorted(new_results, key=ScoredKernel.score)[0:exp.k]
@@ -154,11 +166,11 @@ def perform_kernel_search(X, y, D, experiment_data_file_name, results_filename, 
                 outfile.write('\n%%%%%%%%%% Level %d %%%%%%%%%%\n\n' % i)
                 if exp.verbose_results:
                     for result in all_results:
-                        print >> outfile, result  
+                        print(result, file=outfile)  
                 else:
                     # Only print top k kernels - i.e. those used to seed the next level of the search
                     for result in best_results:
-                        print >> outfile, result 
+                        print(result, file=outfile) 
     
     # Rename temporary results file to actual results file                
     os.rename(results_filename + '.unfinished', results_filename)
@@ -229,7 +241,7 @@ class Experiment(namedtuple("Experiment", 'description, data_dir, max_depth, ran
 
 def experiment_fields_to_str(exp):
     str = "Running experiment:\n"
-    for field, val in izip(exp._fields, exp):
+    for field, val in zip(exp._fields, exp):
         str += "%s = %s,\n" % (field, val)
     return str
 
@@ -239,7 +251,7 @@ def run_experiment_file(filename):
     """       
     expstring = open(filename, 'r').read()
     exp = eval(expstring)
-    print experiment_fields_to_str(exp)
+    print(experiment_fields_to_str(exp))
     
     data_sets = list(gen_all_datasets(exp.data_dir))
     
@@ -254,14 +266,14 @@ def run_experiment_file(filename):
         # Check if this experiment has already been done.
         output_file = os.path.join(exp.results_dir, file + "_result.txt")
         if not(exp.skip_complete and (os.path.isfile(output_file))):
-            print 'Experiment %s' % file
-            print 'Output to: %s' % output_file
+            print('Experiment %s' % file)
+            print('Output to: %s' % output_file)
             data_file = os.path.join(r, file + ".mat")
 
             perform_experiment(data_file, output_file, exp )
-            print "Finished file %s" % file
+            print("Finished file %s" % file)
         else:
-            print 'Skipping file %s' % file
+            print('Skipping file %s' % file)
 
     os.system('reset')  # Stop terminal from going invisible.   
 
@@ -272,7 +284,7 @@ def generate_model_fits(filename):
     expstring = open(filename, 'r').read()
     exp = eval(expstring)
     exp = exp._replace(local_computation = True)
-    print experiment_fields_to_str(exp)
+    print(experiment_fields_to_str(exp))
     
     data_sets = list(gen_all_datasets(exp.data_dir))
     
@@ -287,14 +299,14 @@ def generate_model_fits(filename):
         # Check if this experiment has already been done.
         output_file = os.path.join(exp.results_dir, file + "_result.txt")
         if os.path.isfile(output_file):
-            print 'Experiment %s' % file
-            print 'Output to: %s' % output_file
+            print('Experiment %s' % file)
+            print('Output to: %s' % output_file)
             data_file = os.path.join(r, file + ".mat")
 
             calculate_model_fits(data_file, output_file, exp )
-            print "Finished file %s" % file
+            print("Finished file %s" % file)
         else:
-            print 'Skipping file %s' % file
+            print('Skipping file %s' % file)
 
     os.system('reset')  # Stop terminal from going invisible. 
     

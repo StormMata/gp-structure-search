@@ -75,7 +75,7 @@ def qsub(shell_file, verbose=True, fear=None):
                             'cd ..'])
 
     if verbose:
-        print 'Submitting : %s' % fear_string
+        print('Submitting : %s' % fear_string)
     output_text = command(fear_string, fear)
     # Return the job id
     return output_text[0].split(' ')[2]
@@ -121,12 +121,12 @@ def job_terminated(job_id, status=None, fear=None):
     '''Returns true if job not listed by qstat'''
     if status is None:
         status = qstat_status(fear)
-    return not status.has_key(job_id)
+    return job_id not in status
 
 def job_running(job_id, status=None, fear=None):
     if status is None:
         status = qstat_status(fear)
-    if status.has_key(job_id):
+    if job_id in status:
         return status[job_id] == 'r'
     else:
         return False
@@ -134,7 +134,7 @@ def job_running(job_id, status=None, fear=None):
 def job_queued(job_id, status=None, fear=None):
     if status is None:
         status = qstat_status(fear)
-    if status.has_key(job_id):
+    if job_id in status:
         return status[job_id] == 'qw'
     else:
         return False
@@ -142,7 +142,7 @@ def job_queued(job_id, status=None, fear=None):
 def job_loading(job_id, status=None, fear=None):
     if status is None:
         status = qstat_status(fear)
-    if status.has_key(job_id):
+    if job_id in status:
         return status[job_id] == 't'
     else:
         return False

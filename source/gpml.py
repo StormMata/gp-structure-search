@@ -15,7 +15,7 @@ import subprocess
 try:
     import config
 except:
-    print '\n\nERROR : source/config.py not found\n\nPlease create it following example file as a guide\n\n'
+    print('\n\nERROR : source/config.py not found\n\nPlease create it following example file as a guide\n\n')
     raise Exception('No config')
 import flexiblekernel as fk
 
@@ -33,7 +33,7 @@ def run_matlab_code(code, verbose=False, jvm=True):
     jvm_string = '-nojvm'
     if jvm: jvm_string = ''
     call = [config.MATLAB_LOCATION, '-nosplash', jvm_string, '-nodisplay']
-    print call
+    print(call)
     
     stdin = open(script_file)
     stdout = open(stdout_file, 'w')
@@ -53,12 +53,12 @@ def run_matlab_code(code, verbose=False, jvm=True):
     os.close(fd3)    
     
     if verbose:
-        print
-        print 'Script file (%s) contents : ==========================================' % script_file
-        print open(script_file, 'r').read()
-        print
-        print 'Std out : =========================================='        
-        print open(stdout_file, 'r').read()   
+        print()
+        print('Script file (%s) contents : ==========================================' % script_file)
+        print(open(script_file, 'r').read())
+        print()
+        print('Std out : ==========================================')        
+        print(open(stdout_file, 'r').read())   
     
     if err_txt != '':
         #### TODO - need to catch error local to new MLG machines
@@ -201,7 +201,7 @@ def optimize_params(kernel_expression, kernel_init_params, X, y, return_all=Fals
     scipy.io.savemat(temp_data_file, data)
     
     if verbose:
-        print kernel_init_params
+        print(kernel_init_params)
     
     parameters =  {'datafile': temp_data_file,
                    'writefile': temp_write_file,
@@ -665,7 +665,7 @@ exit();"""
 def plot_decomposition(kernel, X, y, figname, noise=None, X_mean=0, X_scale=1, y_mean=0, y_scale=1):
     matlab_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'matlab'))
     figname = os.path.abspath(os.path.join(os.path.dirname(__file__), figname))
-    print 'Plotting to: %s' % figname
+    print('Plotting to: %s' % figname)
     
     kernel_components = fk.break_kernel_into_summands(kernel)
     latex_names = [k.latex_print().strip() for k in kernel_components]

@@ -37,7 +37,7 @@ def load_data(dataset, record, freq=2.):
                           stdout=open(outfile, 'w'))
     assert ret == 0
 
-    return map(float, open(outfile).readlines())
+    return list(map(float, open(outfile).readlines()))
     
 
 
@@ -68,13 +68,13 @@ def save_data():
         hr = load_data(dataset, record, 0.1)
         outfile = open('../data/ekg_hr_%s.txt' % name, 'w')
         for elt in hr:
-            print >> outfile, elt
+            print(elt, file=outfile)
         outfile.close()
 
 
 def get_X_y(name):
     assert name in ['healthy', 'congestive', 'atrial-fib']
-    y = map(float, open('../data/ekg_hr_%s.txt' % name).readlines())
+    y = list(map(float, open('../data/ekg_hr_%s.txt' % name).readlines()))
     X = np.arange(len(y), dtype=float)
     return X, y
 

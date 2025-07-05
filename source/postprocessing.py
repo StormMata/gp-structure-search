@@ -30,7 +30,7 @@ def parse_all_results(folder, save_file='kernels.tex', one_d=False):
     
     colnames = ['Dataset', 'NLL', 'Kernel' ]
     for rt in gen_all_results(folder):
-        print "dataset: %s kernel: %s\n" % (rt[0], rt[-1].pretty_print())
+        print("dataset: %s kernel: %s\n" % (rt[0], rt[-1].pretty_print()))
         if not one_d:
             entries.append([' %4.1f' % rt[-1].nll, ' $ %s $ ' % rt[-1].latex_print()])
         else:
@@ -86,7 +86,7 @@ def make_all_1d_figures(folder, save_folder='../figures/decomposition/', max_lev
             # A shunt to deal with a legacy issue.
             if datafile == '../data/1d_data/01-airline-months.mat':
                 # Scaling should turn months starting at zero into years starting at 1949
-                print "Special rescaling for airline months data"
+                print("Special rescaling for airline months data")
                 X_mean = X_mean + 1949
                 X_scale = 1.0/12.0
                                 
@@ -100,7 +100,7 @@ def make_all_1d_figures(folder, save_folder='../figures/decomposition/', max_lev
                 os.makedirs(fig_folder)
             gpml.plot_decomposition(stripped_kernel, X, y, os.path.join(fig_folder, file), best_kernel.noise, X_mean, X_scale, y_mean, y_scale)
         else:
-            print "Cannnot find file %s" % results_file
+            print("Cannnot find file %s" % results_file)
             
 def make_all_1d_figures_all_depths(folder, max_depth=10, prefix=''):
     make_all_1d_figures(folder=folder)
@@ -122,23 +122,23 @@ def compare_1d_decompositions():
         
 def collate_decompositions(top_folder, tex, tex_beamer):
     '''Produces a LaTeX document with all decompositions displayed'''
-    latex_header = '''
+    latex_header = r'''
 \documentclass[twoside]{article}
-\usepackage{algorithm}
-\usepackage{algorithmic}
-\usepackage{amssymb,amsmath,amsthm}
-\usepackage{graphicx}
-\usepackage{preamble}
-\usepackage{natbib}
+\\usepackage{algorithm}
+\\usepackage{algorithmic}
+\\usepackage{amssymb,amsmath,amsthm}
+\\usepackage{graphicx}
+\\usepackage{preamble}
+\\usepackage{natbib}
 %%%% REMEMBER ME!
-%\usepackage[draft]{hyperref}
-\usepackage{hyperref}
-\usepackage{color}
-\usepackage{wasysym}
-\usepackage{subfigure}
-\usepackage{tabularx}
-\usepackage{booktabs}
-\usepackage{bm}
+%\\usepackage[draft]{hyperref}
+\\usepackage{hyperref}
+\\usepackage{color}
+\\usepackage{wasysym}
+\\usepackage{subfigure}
+\\usepackage{tabularx}
+\\usepackage{booktabs}
+\\usepackage{bm}
 \\newcommand{\\theHalgorithm}{\\arabic{algorithm}}
 \definecolor{mydarkblue}{rgb}{0,0.08,0.45}
 \hypersetup{ %
@@ -165,11 +165,11 @@ def collate_decompositions(top_folder, tex, tex_beamer):
 %\\arXivtrue
 
 \ifarXiv
-	\usepackage[arxiv]{format/icml2013}
+	\\usepackage[arxiv]{format/icml2013}
 \else
-	\usepackage[accepted]{format/icml2013}
+	\\usepackage[accepted]{format/icml2013}
 \\fi
-%\usepackage[left=1.00in,right=1.00in,bottom=0.25in,top=0.25in]{geometry} %In case we want larger margins for commenting purposes
+%\\usepackage[left=1.00in,right=1.00in,bottom=0.25in,top=0.25in]{geometry} %In case we want larger margins for commenting purposes
 
 %% For submission, make all render blank.
 %\\renewcommand{\LATER}[1]{}
@@ -205,10 +205,10 @@ def collate_decompositions(top_folder, tex, tex_beamer):
 ]
 '''
 
-    beamer_header = '''
+    beamer_header = r'''
 \input{include/header_beamer}
 
-\usecolortheme{default}
+\\usecolortheme{default}
 \\xdefinecolor{Black}{rgb}{0,0,0}
 \\xdefinecolor{White}{rgb}{1,1,1}
 \\xdefinecolor{DarkBlue}{rgb}{0,0,.7}
@@ -235,16 +235,16 @@ def collate_decompositions(top_folder, tex, tex_beamer):
 %\\renewcommand{\\fPROBLEM}[1]{}
 %\\renewcommand{\NA}[1]{#1}  %% Note, NA's pass through!
 
-\usepackage{alltt}
-\usepackage{psfrag}
-\usepackage{pstool}
-\usepackage{multicol}
+\\usepackage{alltt}
+\\usepackage{psfrag}
+\\usepackage{pstool}
+\\usepackage{multicol}
 
 \def\\newarrow{\mbox{\begin{tikzpicture}
-             \useasboundingbox{(-3pt,-4.5pt) rectangle (19pt,1pt)};
+             \\useasboundingbox{(-3pt,-4.5pt) rectangle (19pt,1pt)};
              \draw[->] (0,-0.07)--(17pt,-0.07);\end{tikzpicture}}}
 
-\usetikzlibrary{shapes.geometric,arrows,chains,matrix,positioning,scopes}
+\\usetikzlibrary{shapes.geometric,arrows,chains,matrix,positioning,scopes}
  \makeatletter
  \\tikzset{join/.code=\\tikzset{after node path={%
        \ifx\\tikzchainprevious\pgfutil@empty\else(\\tikzchainprevious)%
@@ -255,29 +255,29 @@ def collate_decompositions(top_folder, tex, tex_beamer):
  }
 
 \\tikzstyle{mybox} = [draw=white, rectangle]
-\usepackage{ifthen}
-\usepackage{booktabs}
+\\usepackage{ifthen}
+\\usepackage{booktabs}
 
 \\begin{document}             
 '''
 
-    latex_footer = '''
+    latex_footer = r'''
 
 \end{document}    
 '''
 
-    beamer_footer = '''
+    beamer_footer = r'''
 
 \end{document}    
 '''
 
-    latex_body = '''
+    latex_body = r'''
 \section{%(folder)s}
 
 \input{figures/%(folder)s/decomp.tex}    
 '''    
 
-    beamer_body = '''
+    beamer_body = r'''
     
 \\begin{frame}{%(folder)s}
   \center
@@ -286,7 +286,7 @@ def collate_decompositions(top_folder, tex, tex_beamer):
 
 '''
 
-    decomp_header = '''
+    decomp_header = r'''
 \\begin{figure}[H]
 \\newcommand{\wmgd}{1\columnwidth}
 \\newcommand{\hmgd}{3.0cm}
@@ -296,13 +296,13 @@ def collate_decompositions(top_folder, tex, tex_beamer):
 \mbm \includegraphics[width=\wmgd,height=\hmgd]{\mdrd/%(folder)s_all} \\\\ = \\\\
 '''
 
-    decomp_footer = '''
+    decomp_footer = r'''
 \mbm \includegraphics[width=\wmgd,height=\hmgd]{\mdrd/%(folder)s_resid}
 \end{tabular}
 \end{figure}
 '''
 
-    decomp_body = '''
+    decomp_body = r'''
 \mbm \includegraphics[width=\wmgd,height=\hmgd]{\mdrd/%(folder)s_%(number)d} \\\\ + \\\\
 '''
     

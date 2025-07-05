@@ -8,17 +8,17 @@ James Robert Lloyd (jrl44@cam.ac.uk)
 
 """
 
-import pyfear # Is this line necessary?
-from pyfear import fear
-from util import mkstemp_safe
+from . import pyfear # Is this line necessary?
+from .pyfear import fear
+from .util import mkstemp_safe
 import os
 import psutil, subprocess, sys, time
 from utils.counter import Progress
 
 try:
-    from config import *
+    from .config import *
 except:
-    print '\n\nERROR : source/cblparallel/config.py not found\n\nPlease create it following example file as a guide\n\n'
+    print('\n\nERROR : source/cblparallel/config.py not found\n\nPlease create it following example file as a guide\n\n')
     raise Exception('No config')
 
 import zipfile, zlib
@@ -225,7 +225,7 @@ quit()
             temp_dir = HOME_TEMP_PATH
 
         if verbose:
-            print 'Writing temporary files locally'
+            print('Writing temporary files locally')
         for (i, code) in enumerate(scripts):
             if language == 'python':
                 script_files[i] = mkstemp_safe(temp_dir, '.py')
@@ -258,7 +258,7 @@ quit()
 
         if zip_files:
             if verbose:
-                print 'Zipping files'
+                print('Zipping files')
             zip_file_name = mkstemp_safe(temp_dir, '.zip')
             zf = zipfile.ZipFile(zip_file_name, mode='w')
             for script in script_files:
@@ -267,14 +267,14 @@ quit()
                 zf.write(shell, arcname=(os.path.split(shell)[-1]), compress_type=zipfile.ZIP_DEFLATED)
             zf.close()
             if verbose:
-                print 'Sending zip file to fear'
+                print('Sending zip file to fear')
             fear.copy_to_temp(zip_file_name)
             if verbose:
-                print 'Unzipping on fear'
+                print('Unzipping on fear')
             fear.command('cd %(temp_path)s ; unzip %(zip_file)s ; rm %(zip_file)s' % {'temp_path' : REMOTE_TEMP_PATH, 'zip_file' : os.path.split(zip_file_name)[-1]})
 
         # Loop through jobs, submitting jobs whenever fear usage low enough, re-submitting failed jobs
-        print 'Submitting %d jobs' % len(scripts)
+        print('Submitting %d jobs' % len(scripts))
         while not fear_finished:
             # Update knowledge of fear - trying to limit communication
             fear.qstat()
@@ -294,7 +294,7 @@ quit()
                         fear.copy_to_temp(shell_files[i])
                     # Submit the job to fear
                     if verbose:
-                        print 'Submitting job %d of %d' % (i + 1, len(scripts)),
+                        print('Submitting job %d of %d' % (i + 1, len(scripts)), end=' ')
                     job_ids[i] = fear.qsub(os.path.join(REMOTE_TEMP_PATH, os.path.split(shell_files[i])[-1]), verbose=verbose) # Hide path constant
                     # Increment job count
                     jobs_alive += 1
@@ -331,7 +331,7 @@ quit()
                         #   (os.stat(output_files[i]).st_size == 0):
                         if (os.stat(output_files[i]).st_size == 0):
                             # Job has finished but missing output - resubmit later
-                            print 'Shell script %s job_id %s failed' % (os.path.split(shell_files[i])[-1], job_ids[i])
+                            print('Shell script %s job_id %s failed' % (os.path.split(shell_files[i])[-1], job_ids[i]))
                             # Save job id for file deletion
                             old_job_id = job_ids[i]
                             job_ids[i] = None
@@ -346,7 +346,7 @@ quit()
                             #    fear.copy_from_localhost(localpath=output_files[i], remotepath=os.path.join(LOCAL_TEMP_PATH, os.path.split(output_files[i])[-1]))
                             # Tell the world
                             if verbose:
-                                print '%d / %d jobs complete' % (sum(job_finished), len(job_finished))
+                                print('%d / %d jobs complete' % (sum(job_finished), len(job_finished)))
                             # Tidy up local temporary directory - actually - do this in one batch later
                             #os.remove(script_files[i])
                             #os.remove(shell_files[i])
@@ -373,7 +373,7 @@ quit()
                         should_sleep = False
                         old_job_id = job_ids[i]
                         fear.qdel(job_ids[i])
-                        print 'Shell script %s job_id %s stuck, deleting' % (os.path.split(shell_files[i])[-1], job_ids[i])
+                        print('Shell script %s job_id %s stuck, deleting' % (os.path.split(shell_files[i])[-1], job_ids[i]))
                         #### TODO - remove this code duplication
                         # Tidy up fear
                         fear.rm(os.path.join(REMOTE_TEMP_PATH, os.path.split(script_files[i])[-1]))
@@ -392,18 +392,18 @@ quit()
             if all(job_finished):
                 fear_finished = True    
             elif should_sleep:
-                print '%d of %d jobs complete' % (sum(job_finished), len(job_finished))
+                print('%d of %d jobs complete' % (sum(job_finished), len(job_finished)))
                 if verbose:
                     #fear.qstat()
-                    print '%d jobs running' % fear.jobs_running(update=False)
-                    print '%d jobs loading' % fear.jobs_loading(update=False)
-                    print '%d jobs queued' % fear.jobs_queued(update=False)
+                    print('%d jobs running' % fear.jobs_running(update=False))
+                    print('%d jobs loading' % fear.jobs_loading(update=False))
+                    print('%d jobs queued' % fear.jobs_queued(update=False))
                     #print 'Sleeping for %d seconds' % job_check_sleep
                 time.sleep(job_check_sleep)
 
     # Tidy up temporary directory
     if verbose:
-        print 'Removing temporary files'
+        print('Removing temporary files')
     for i in range(len(scripts)):
         os.remove(script_files[i])
         os.remove(shell_files[i])
@@ -529,7 +529,7 @@ quit()
                                         os.path.split(script_files[i])[-1].split('.')[0] + '\n')
                     # Start running the job
                     if verbose:
-                        print 'Submitting job %d of %d' % (i + 1, len(scripts))
+                        print('Submitting job %d of %d' % (i + 1, len(scripts)))
                     stdout_file_handles[i] = open(stdout_files[i], 'w')
                     files_open = files_open + 1
                     #processes[i] = subprocess.Popen(['sh', shell_files[i]], stdout = stdout_file_handles[i]);
@@ -546,12 +546,12 @@ quit()
                     if os.path.isfile(flag_files[i]):
                         job_finished[i] = True
                         if verbose:
-                            print 'Job %d of %d has completed' % (i + 1, len(scripts))
+                            print('Job %d of %d has completed' % (i + 1, len(scripts)))
                         else:
                             prog.tick()
                     else:
                         if verbose:
-                            print 'Job %d has failed - will try again later' % i + 1
+                            print('Job %d has failed - will try again later' % i + 1)
                         processes[i] = None
                     # Tidy up temp files
                     os.remove(script_files[i])
@@ -575,7 +575,7 @@ quit()
             if verbose:
                 # print '%d jobs running' % n_running
                 # print '%d jobs queued' % n_queued
-                print 'Sleeping for %d seconds' % job_check_sleep
+                print('Sleeping for %d seconds' % job_check_sleep)
             time.sleep(job_check_sleep)
 
     #### TODO - return job output and error files as applicable (e.g. there may be multiple error files associated with one script)

@@ -1,6 +1,6 @@
 import os
 
-import base
+from . import base
 import config
 import mit_job_controller as mjc
 
@@ -8,7 +8,7 @@ class Scheduler:
     def evaluate_kernels(self, kernels, X, y):
         scored_kernels = []
         for i, k in enumerate(kernels):
-            print 'Evaluating %d of %d...' % (i+1, len(kernels))
+            print('Evaluating %d of %d...' % (i+1, len(kernels)))
             sk = mjc.evaluate_kernel(k, X, y)
             scored_kernels.append(sk)
         return scored_kernels

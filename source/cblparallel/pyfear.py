@@ -7,8 +7,8 @@ common tasks
 '''
 
 import pysftp # Wraps up various paramiko calls
-from config import * # Various constants such as USERNAME
-from util import timeoutCommand
+from .config import * # Various constants such as USERNAME
+from .util import timeoutCommand
 import os
 import re
 import tempfile
@@ -175,7 +175,7 @@ class fear(object):
     
         if verbose:
             #print 'Submitting : %s' % fear_string
-            print os.path.split(shell_file)[-1]
+            print(os.path.split(shell_file)[-1])
             
         output_text = self.command(fear_string)
         # Return the job id
@@ -221,12 +221,12 @@ class fear(object):
         '''Returns true if job not listed by qstat'''
         if update:
             self.qstat()
-        return not self.status.has_key(job_id)
+        return job_id not in self.status
     
     def job_running(self, job_id, update=False):
         if update:
             self.qstat()
-        if self.status.has_key(job_id):
+        if job_id in self.status:
             return self.status[job_id] == 'r'
         else:
             return False
@@ -234,7 +234,7 @@ class fear(object):
     def job_queued(self, job_id, update=False):
         if update:
             self.qstat()
-        if self.status.has_key(job_id):
+        if job_id in self.status:
             return self.status[job_id] == 'qw'
         else:
             return False
@@ -242,7 +242,7 @@ class fear(object):
     def job_loading(self, job_id, update=False):
         if update:
             self.qstat()
-        if self.status.has_key(job_id):
+        if job_id in self.status:
             return self.status[job_id] == 't'
         else:
             return False

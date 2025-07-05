@@ -2,8 +2,8 @@ import itertools
 import numpy as np
 nax = np.newaxis
 
-import gaussians
-from misc import array_map, my_inv, full_shape, broadcast, dot, process_slice, match_shapes, _err_string, set_err_info, transp
+from . import gaussians
+from .misc import array_map, my_inv, full_shape, broadcast, dot, process_slice, match_shapes, _err_string, set_err_info, transp
 import scipy.linalg
 
 class BaseMatrix:
@@ -355,7 +355,7 @@ class EyeMatrix(BaseMatrix):
 def _x_QDQ_x(Q, d, x):
     fsh = full_shape([x.shape[:-1], Q.shape, d.shape])
     prod = np.zeros(fsh)
-    for full_idx in itertools.product(*map(range, fsh)):
+    for full_idx in itertools.product(*list(map(range, fsh))):
         Q_idx = broadcast(full_idx, Q.shape)
         d_idx = broadcast(full_idx, d.shape)
         x_idx = broadcast(full_idx, x.shape[:-1])
@@ -368,7 +368,7 @@ def _x_QDQ_x(Q, d, x):
 def _QDQ_x(Q, d, x):
     fsh = full_shape([x.shape[:-1], Q.shape, d.shape])
     prod = np.zeros(fsh + (x.shape[-1],))
-    for full_idx in itertools.product(*map(range, fsh)):
+    for full_idx in itertools.product(*list(map(range, fsh))):
         Q_idx = broadcast(full_idx, Q.shape)
         d_idx = broadcast(full_idx, d.shape)
         x_idx = broadcast(full_idx, x.shape[:-1])
@@ -393,7 +393,7 @@ class EigMatrix(BaseMatrix):
 
     def full(self):
         S = np.zeros(full_shape([self._d.shape, self._Q.shape]) + (self.dim, self.dim))
-        for idx in itertools.product(*map(range, S.shape[:-2])):
+        for idx in itertools.product(*list(map(range, S.shape[:-2]))):
             d_idx, Q_idx = broadcast(idx, self._d.shape), broadcast(idx, self._Q.shape)
             d, Q = self._d[d_idx], self._Q[Q_idx]
             S[idx + (Ellipsis,)] = np.dot(Q*d, Q.T)
@@ -468,7 +468,7 @@ class EigMatrix(BaseMatrix):
         d, s = self._d, self._s_perp
         fsh = full_shape([d.shape, s.shape])
         logdet = np.zeros(fsh)
-        for idx in itertools.product(*map(range, fsh)):
+        for idx in itertools.product(*list(map(range, fsh))):
             d_idx, s_idx = broadcast(idx, d.shape), broadcast(idx, s.shape)
             logdet[idx] = np.log(d[d_idx]).sum() + \
                           (self.dim - d[d_idx].size) * np.log(s[s_idx])
@@ -512,12 +512,12 @@ class EigMatrix(BaseMatrix):
             rank = dim * np.ones(smsh, dtype=int)
 
         d = np.zeros(d_shape, dtype=object)
-        for idx in itertools.product(*map(range, d_shape)):
+        for idx in itertools.product(*list(map(range, d_shape))):
             sm_idx = broadcast(idx, smsh)
             d[idx] = np.random.gamma(1., 1., size=rank[sm_idx])
 
         Q = np.zeros(Q_shape, dtype=object)
-        for idx in itertools.product(*map(range, Q_shape)):
+        for idx in itertools.product(*list(map(range, Q_shape))):
             sm_idx = broadcast(idx, smsh)
             Q[idx], _ = np.linalg.qr(np.random.normal(size=(dim, rank[sm_idx])))
 
