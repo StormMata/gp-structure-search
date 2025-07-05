@@ -21,6 +21,7 @@ import flexiblekernel as fk
 from flexiblekernel import ScoredKernel
 import grammar
 import gpml
+import sys
 import utils.latex
 import cblparallel
 from cblparallel.util import mkstemp_safe
@@ -34,6 +35,8 @@ def remove_duplicates(kernels, X, n_eval=250, local_computation=True, verbose=Tr
     Test the top n_eval performing kernels for equivalence, in terms of their covariance matrix evaluated on training inputs
     Assumes kernels is a list of ScoredKernel objects
     '''
+    print("Removing duplicates", file=sys.__stdout__)
+    print("Removing duplicates")
     # Because this is slow, we can do it locally.
     local_computation = True
 
@@ -61,6 +64,8 @@ def remove_duplicates(kernels, X, n_eval=250, local_computation=True, verbose=Tr
     return kernels
  
 def remove_nan_scored_kernels(scored_kernels):    
+    print("Removing nan kernels", file=sys.__stdout__)
+    print("Removing nan kernels")
     return [k for k in scored_kernels if not np.isnan(k.score())] 
     
 def perform_kernel_search(X, y, D, experiment_data_file_name, results_filename, exp):
@@ -105,8 +110,12 @@ def perform_kernel_search(X, y, D, experiment_data_file_name, results_filename, 
     
     # Perform search
     for depth in range(exp.max_depth):
-        print(f"\n--- Depth {depth} ---")
-        print(f"Current kernels to score: {len(current_kernels)}")
+        # print(f"\n--- Depth {depth} ---")
+        print("----- DEPTH {} -----".format(depth+1), file=sys.__stdout__)
+        print("----- DEPTH {} -----".format(depth+1))
+        # print(f"Current kernels to score: {len(current_kernels)}")
+        print("Current kernels to score: {}".format(len(current_kernels)), file=sys.__stdout__)
+        print("Current kernels to score: {}".format(len(current_kernels)))
 
         if exp.debug==True:
             current_kernels = current_kernels[0:4]
@@ -114,6 +123,8 @@ def perform_kernel_search(X, y, D, experiment_data_file_name, results_filename, 
         # Add random restarts to kernels
         current_kernels = fk.add_random_restarts(current_kernels, exp.n_rand, exp.sd, data_shape=data_shape)
         # Score the kernels
+        print("Evaluating kernels", file=sys.__stdout__)
+        print("Evaluating kernels")
         new_results = jc.evaluate_kernels(current_kernels, X, y, verbose=exp.verbose, local_computation=exp.local_computation,
                                           zip_files=False, max_jobs=exp.max_jobs, iters=exp.iters, zero_mean=exp.zero_mean, random_seed=exp.random_seed)
         # Enforce the period heuristic
@@ -141,6 +152,8 @@ def perform_kernel_search(X, y, D, experiment_data_file_name, results_filename, 
             print(result.nll, result.laplace_nle, result.bic_nle, result.k_opt.pretty_print())
 
         all_results = all_results + new_results
+        print("Sorting...", file=sys.__stdout__)
+        print("Sorting...")
         all_results = sorted(all_results, key=ScoredKernel.score, reverse=True)
 
         results_sequence.append(all_results)
@@ -150,6 +163,9 @@ def perform_kernel_search(X, y, D, experiment_data_file_name, results_filename, 
                 print(result.nll, result.laplace_nle, result.bic_nle, result.k_opt.pretty_print())
         
         # Extract the best k kernels from the new all_results
+        print("Extracting {} best kernels".format(exp.k), file=sys.__stdout__)
+        print("Extracting {} best kernels".format(exp.k))
+
         best_results = sorted(new_results, key=ScoredKernel.score)[0:exp.k]
         best_kernels = [r.k_opt for r in best_results]
         current_kernels = grammar.expand_kernels(D, best_kernels, verbose=exp.verbose, debug=exp.debug, base_kernels=exp.base_kernels)
@@ -158,6 +174,7 @@ def perform_kernel_search(X, y, D, experiment_data_file_name, results_filename, 
             current_kernels = current_kernels[0:4]
 
         # Write all_results to a temporary file at each level.
+        print("Printing results to temporary file", file=sys.__stdout__)
         all_results = sorted(all_results, key=ScoredKernel.score, reverse=True)
         with open(results_filename + '.unfinished', 'w') as outfile:
             outfile.write('Experiment all_results for\n datafile = %s\n\n %s \n\n' \
@@ -179,6 +196,8 @@ def parse_results( results_filename, max_level=None ):
     '''
     Returns the best kernel in an experiment output file as a ScoredKernel
     '''
+    print("Scoring kernels", file=sys.__stdout__)
+    print("Scoring kernels")
     # Read relevant lines of file
     lines = []
     with open(results_filename) as results_file:
@@ -196,6 +215,7 @@ def parse_results( results_filename, max_level=None ):
 
 def gen_all_datasets(dir):
     """Looks through all .mat files in a directory, or just returns that file if it's only one."""
+    print("Getting data", file=sys.__stdout__)
     if dir.endswith(".mat"):
         (r, f) = os.path.split(dir)
         (f, e) = os.path.splitext(f)
@@ -329,6 +349,9 @@ def perform_experiment(data_file, output_file, exp):
     os.system('reset')  # Stop terminal from going invisible.
     
 def calculate_model_fits(data_file, output_file, exp):
+
+    print("Calculating model fits", file=sys.__stdout__)
+    print("Calculating model fits")
          
     prediction_file = os.path.join(exp.results_dir, os.path.splitext(os.path.split(data_file)[-1])[0] + "_predictions.mat")
     X, y, D, = gpml.load_mat(data_file, y_dim=1)

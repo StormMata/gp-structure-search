@@ -11,9 +11,16 @@ Created April 2013
 import experiment
 import postprocessing
 import sys
+import os
 
-# Open a log file for writing
-log_file = open('/Users/stormmata/Downloads/gp_results_temp/debug_log.txt', 'w')
+# Set base path for log/output - adjust as needed
+base_path = "/Users/stormmata/Downloads/gp_results_temp"
+
+# Construct the log file path
+log_path = os.path.join(base_path, "search_log.txt")
+
+# Open the log file for writing
+log_file = open(log_path, 'w')
 
 # Redirect stdout to the log file
 sys.stdout = log_file
@@ -26,3 +33,6 @@ experiment.run_experiment_file('../examples/fast_example.py')
     
 sys.stdout = sys.__stdout__
 log_file.close()
+
+# Now print the final message to the screen
+print(f'Log file written to : {log_path}')
