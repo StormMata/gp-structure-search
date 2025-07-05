@@ -117,7 +117,8 @@ def expand_single_tree(kernel, grammar):
     result = []
     for lhs, rhs, types in grammar.rules:
         if grammar.type_matches(kernel, types[lhs]):
-            free_vars = types.keys()
+            # free_vars = types.keys()
+            free_vars = sorted(types.keys())
             assert lhs in free_vars
             free_vars.remove(lhs)
             choices = itertools.product(*[grammar.list_options(types[v]) for v in free_vars])
@@ -165,7 +166,8 @@ def canonical(kernel):
                 new_ops += op_canon.operands
             else:
                 new_ops.append(op_canon)
-        return fk.SumKernel(sorted(new_ops))
+        # return fk.SumKernel(sorted(new_ops))
+        return fk.SumKernel(sorted(new_ops, key=lambda k: str(k)))
     elif isinstance(kernel, fk.ProductKernel):
         new_ops = []
         for op in kernel.operands:
@@ -174,12 +176,14 @@ def canonical(kernel):
                 new_ops += op_canon.operands
             else:
                 new_ops.append(op_canon)
-        return fk.ProductKernel(sorted(new_ops))
+        # return fk.ProductKernel(sorted(new_ops))
+        return fk.ProductKernel(sorted(new_ops, key=lambda k: str(k)))
     else:
         raise RuntimeError('Unknown kernel class:', kernel.__class__)
 
 def remove_duplicates(kernels):
-    kernels = sorted(map(canonical, kernels))
+    # kernels = sorted(map(canonical, kernels))
+    kernels = sorted(map(canonical, kernels), key=lambda k: str(k))
     result = []
     curr = None
     for k in kernels:

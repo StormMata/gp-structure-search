@@ -71,7 +71,15 @@ def perform_kernel_search(X, y, D, experiment_data_file_name, results_filename, 
 
     # Initialise kernels to be all base kernels along all dimensions.
     current_kernels = list(fk.base_kernels(D, exp.base_kernels))
-    
+
+    print("# Initial base kernels:", len(current_kernels))
+
+    print("Base kernel input string:", exp.base_kernels)
+    print("Base kernels generated:")
+    for k in current_kernels:
+        print(" ", k.pretty_print())
+    print("Total base kernels:", len(current_kernels))
+
     # Create location, scale and minimum period parameters to pass around for initialisations
     data_shape = {}
     data_shape['input_location'] = [np.mean(X[:,dim]) for dim in range(X.shape[1])]
@@ -96,6 +104,8 @@ def perform_kernel_search(X, y, D, experiment_data_file_name, results_filename, 
     
     # Perform search
     for depth in range(exp.max_depth):
+        print("\n--- Depth {} ---".format(depth))
+        print("# Current kernels to score: {}".format(len(current_kernels)))
         
         if exp.debug==True:
             current_kernels = current_kernels[0:4]
@@ -111,6 +121,7 @@ def perform_kernel_search(X, y, D, experiment_data_file_name, results_filename, 
             new_results = [sk for sk in new_results if not sk.k_opt.out_of_bounds(data_shape)]
         # Some of the scores may have failed - remove nans to prevent sorting algorithms messing up
         new_results = remove_nan_scored_kernels(new_results)
+        print("# New results after scoring: {}".format(len(new_results)))
         assert(len(new_results) > 0) # FIXME - Need correct control flow if this happens 
         # Sort the new all_results
         new_results = sorted(new_results, key=ScoredKernel.score, reverse=True)
@@ -139,9 +150,13 @@ def perform_kernel_search(X, y, D, experiment_data_file_name, results_filename, 
         
         # Extract the best k kernels from the new all_results
         best_results = sorted(new_results, key=ScoredKernel.score)[0:exp.k]
-        best_kernels = [r.k_opt for r in best_results]
-        current_kernels = grammar.expand_kernels(D, best_kernels, verbose=exp.verbose, debug=exp.debug, base_kernels=exp.base_kernels)
+        # best_kernels = [r.k_opt for r in best_results]
+        # current_kernels = grammar.expand_kernels(D, best_kernels, verbose=exp.verbose, debug=exp.debug, base_kernels=exp.base_kernels)
         
+        best_kernels = [r.k_opt for r in best_results]
+        best_kernels = sorted(best_kernels, key=str)
+        current_kernels = grammar.expand_kernels(D, best_kernels, verbose=exp.verbose, debug=exp.debug, base_kernels=exp.base_kernels)
+
         if exp.debug==True:
             current_kernels = current_kernels[0:4]
 

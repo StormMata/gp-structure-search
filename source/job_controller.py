@@ -136,7 +136,12 @@ def evaluate_kernels(kernels, X, y, verbose=True, noise=None, iters=300, local_c
         #### Need to be careful with % signs
         #### For the moment, cblparallel expects no single % signs - FIXME
         scripts[i] = re.sub('% ', '%% ', scripts[i])
-    
+
+#        print("\n--- Script {}/{} ---".format(i+1, len(kernels)))
+#        print("Kernel: {}".format(kernel.pretty_print()))
+#        print("Param vector: {}".format(kernel.param_vector()))
+#        print("Generated MATLAB script:\n{}".format(scripts[i]))
+
     # Send to cblparallel and save output_files
     if verbose:
         print 'Sending scripts to cblparallel'
@@ -156,9 +161,9 @@ def evaluate_kernels(kernels, X, y, verbose=True, noise=None, iters=300, local_c
     for (i, output_file) in enumerate(output_files):
         if verbose:
             print 'Removing output file %d of %d' % (i + 1, len(kernels)) 
-        os.remove(output_file)
+ #       os.remove(output_file)
     # Remove temporary data file (perhaps on the cluster server)
-    cblparallel.remove_temp_file(data_file, local_computation)
+ #   cblparallel.remove_temp_file(data_file, local_computation)
     
     # Return results i.e. list of ScoredKernel objects
     return results     
