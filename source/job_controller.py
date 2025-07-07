@@ -70,7 +70,7 @@ def covariance_distance(kernels, X, local_computation=True, verbose=True):
     code = re.sub('% ', '%% ', code) # HACK - cblparallel not fond of % signs at the moment
     # Run code - either locally or on cluster - returning location of output file
     if local_computation:
-        output_file = cblparallel.run_batch_locally([code], language='matlab', max_cpu=1.1, max_mem=1.1, job_check_sleep=30, verbose=verbose, single_thread=False)[0] 
+        output_file = cblparallel.run_batch_locally([code], language='matlab', max_cpu=1.1, max_mem=0.9, job_check_sleep=30, verbose=verbose, single_thread=False)[0] 
     else:
         output_file = cblparallel.run_batch_on_fear([code], language='matlab', max_jobs=500, verbose=verbose)[0]
     # Read in results from experiment
@@ -161,9 +161,9 @@ def evaluate_kernels(kernels, X, y, verbose=True, noise=None, iters=300, local_c
     for (i, output_file) in enumerate(output_files):
         if verbose:
             print('Removing output file %d of %d' % (i + 1, len(kernels))) 
-        # os.remove(output_file)
+        os.remove(output_file)
     # Remove temporary data file (perhaps on the cluster server)
-    # cblparallel.remove_temp_file(data_file, local_computation)
+    cblparallel.remove_temp_file(data_file, local_computation)
     
     # Return results i.e. list of ScoredKernel objects
     return results     

@@ -430,8 +430,19 @@ class RQKernel(BaseKernel):
     def depth(self):
         return 0   
             
+    # def out_of_bounds(self, constraints):
+    #     return (self.lengthscale < constraints['min_lengthscale']) or (self.alpha < constraints['min_alpha'])
+    
     def out_of_bounds(self, constraints):
-        return (self.lengthscale < constraints['min_lengthscale']) or (self.alpha < constraints['min_alpha'])
+        min_lengthscale = constraints.get('min_lengthscale')
+        min_alpha = constraints.get('min_alpha')
+
+        lengthscale = np.asarray(self.lengthscale)
+        alpha = np.asarray(self.alpha)
+
+        lengthscale_out = (min_lengthscale is not None) and np.any(lengthscale < min_lengthscale)
+        alpha_out = (min_alpha is not None) and np.any(alpha < min_alpha)
+        return lengthscale_out or alpha_out
     
 class ConstKernelFamily(BaseKernelFamily):
     def from_param_vector(self, params):

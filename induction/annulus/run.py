@@ -38,7 +38,7 @@ time.sleep(7)
 # ## ----------------------- 10MW -----------------------
 # print('----------------------- 10MW -----------------------')
 # # Set base path for log/output - adjust as needed
-# base_path = "/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/induction_modeling/gaussian_process/10MW/results/rotor"
+# base_path = "/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/induction_modeling/gaussian_process/10MW/results/annulus"
 
 # # Construct the log file path
 # log_path = os.path.join(base_path, "search_log.txt")
@@ -49,7 +49,7 @@ time.sleep(7)
 # # Redirect stdout to the log file
 # sys.stdout = log_file
 
-# experiment.run_experiment_file('/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/gp-structure-search/induction/rotor/10MW/10MW_rotor.py')
+# experiment.run_experiment_file('/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/gp-structure-search/induction/annulus/10MW/10MW_annulus.py')
 
 # kill_matlab()
 
@@ -61,7 +61,7 @@ time.sleep(7)
 # print('Waiting for 7 seconds')
 # time.sleep(7)
 
-# # ## ----------------------- 15MW -----------------------
+# ## ----------------------- 15MW -----------------------
 
 # print('----------------------- 15MW -----------------------')
 # base_path = "/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/induction_modeling/gaussian_process/15MW/results/rotor"
@@ -76,29 +76,29 @@ time.sleep(7)
 # print('Waiting for 7 seconds')
 # time.sleep(7)
 
-## ----------------------- 22MW -----------------------
+# ## ----------------------- 22MW -----------------------
 
-print('----------------------- 22MW -----------------------')
-base_path = "/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/induction_modeling/gaussian_process/22MW/results/rotor"
-log_path = os.path.join(base_path, "search_log.txt")
-log_file = open(log_path, 'w')
-sys.stdout = log_file
-experiment.run_experiment_file('/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/gp-structure-search/induction/rotor/22MW/22MW_rotor.py')
-kill_matlab()
-sys.stdout = sys.__stdout__
-log_file.close()
-print(f'Log file written to : {log_path}')
-print('Waiting for 7 seconds')
-time.sleep(7)
+# print('----------------------- 22MW -----------------------')
+# base_path = "/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/induction_modeling/gaussian_process/22MW/results/rotor"
+# log_path = os.path.join(base_path, "search_log.txt")
+# log_file = open(log_path, 'w')
+# sys.stdout = log_file
+# experiment.run_experiment_file('/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/gp-structure-search/induction/rotor/22MW/22MW_rotor.py')
+# kill_matlab()
+# sys.stdout = sys.__stdout__
+# log_file.close()
+# print(f'Log file written to : {log_path}')
+# print('Waiting for 7 seconds')
+# time.sleep(7)
 
 # ## ----------------------- ALL -----------------------
 
 print('----------------------- ALL -----------------------')
-base_path = "/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/induction_modeling/gaussian_process/all_turbines/results/rotor"
+base_path = "/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/induction_modeling/gaussian_process/all_turbines/results/annulus"
 log_path = os.path.join(base_path, "search_log.txt")
 log_file = open(log_path, 'w')
 sys.stdout = log_file
-experiment.run_experiment_file('/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/gp-structure-search/induction/rotor/all_turbines/all_rotor.py')
+experiment.run_experiment_file('/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/gp-structure-search/induction/annulus/all_turbines/all_rotor.py')
 kill_matlab()
 sys.stdout = sys.__stdout__
 log_file.close()
