@@ -265,7 +265,7 @@ def experiment_fields_to_str(exp):
         str += "%s = %s,\n" % (field, val)
     return str
 
-def run_experiment_file(filename):
+def run_experiment_file(filename, result_append):
     """
     This is intended to be the function that's called to initiate a series of experiments.
     """       
@@ -284,7 +284,7 @@ def run_experiment_file(filename):
 
     for r, file in data_sets:
         # Check if this experiment has already been done.
-        output_file = os.path.join(exp.results_dir, file + "_result.txt")
+        output_file = os.path.join(exp.results_dir, f'{file}_{result_append}_result.txt')
         if not(exp.skip_complete and (os.path.isfile(output_file))):
             print('Experiment %s' % file)
             print('Output to: %s' % output_file)

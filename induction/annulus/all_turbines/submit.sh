@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=104
+#SBATCH --time=48:00:00
+#SBATCH -J ALL_annulus
+#SBATCH --account=TG-ATM170028
+#SBATCH -p spr
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=storm@mit.edu
+
+module load matlab
+
+conda run --no-capture-output -n gp_search_py3 python3 run.py
