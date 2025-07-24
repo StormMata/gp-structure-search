@@ -2,7 +2,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=104
 #SBATCH --time=24:00:00
-#SBATCH -J 10MW_annulus_D3
+#SBATCH -J 10MW_ann_D3_OH
 #SBATCH --account=TG-ATM170028
 #SBATCH -p spr
 #SBATCH --mail-type=ALL
