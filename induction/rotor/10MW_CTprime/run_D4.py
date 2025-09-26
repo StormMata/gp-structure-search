@@ -25,7 +25,7 @@ case = 'D4'
 print('----------------------- 10MW -----------------------')
 # Set base path for log/output - adjust as needed
 # base_path = "/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/induction_modeling/gaussian_process/10MW/results/rotor"
-base_path = "/scratch/09909/smata/induction_modeling/gaussian_process/10MW/results/rotor_its"
+base_path = "/scratch/09909/smata/induction_modeling/gaussian_process/10MW/results/rotor_CTp"
 
 # Construct the log file path
 log_path = os.path.join(base_path,  f'{case}_search_log.txt')
@@ -37,7 +37,7 @@ log_file = open(log_path, 'w')
 sys.stdout = log_file
 
 # experiment.run_experiment_file('/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/gp-structure-search/induction/rotor/10MW/10MW_rotor.py')
-experiment.run_experiment_file(f'/work2/09909/smata/stampede3/gp-structure-search/induction/rotor/10MW/10MW_{case}_rotor.py', case)
+experiment.run_experiment_file(f'/work2/09909/smata/stampede3/gp-structure-search/induction/rotor/10MW_CTprime/10MW_{case}_rotor.py', case)
 
 sys.stdout = sys.__stdout__
 log_file.close()

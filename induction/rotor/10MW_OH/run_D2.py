@@ -25,7 +25,7 @@ case = 'D2'
 print('----------------------- 10MW -----------------------')
 # Set base path for log/output - adjust as needed
 # base_path = "/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/induction_modeling/gaussian_process/10MW/results/rotor"
-base_path = "/scratch/09909/smata/induction_modeling/gaussian_process/10MW/results/rotor_OH"
+base_path = "/scratch/09909/smata/induction_modeling/gaussian_process/10MW/results/rotor_OH_its"
 
 # Construct the log file path
 log_path = os.path.join(base_path,  f'{case}_search_log.txt')

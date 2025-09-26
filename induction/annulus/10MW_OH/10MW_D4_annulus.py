@@ -3,7 +3,7 @@
 Experiment( description             = '10MW turbine data in annulus-average form',
             # data_dir                = '/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/induction_modeling/gaussian_process/10MW/train_data/wrf_10MW_ann.mat',
             # results_dir             = '/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/induction_modeling/gaussian_process/10MW/results/annulus',
-            data_dir                = '/scratch/09909/smata/induction_modeling/gaussian_process/10MW/train_data/wrf_10MW_OH_ann.mat',
+            data_dir                = '/scratch/09909/smata/induction_modeling/gaussian_process/10MW/train_data/wrf_10MW_ann_OH.mat',
             results_dir             = '/scratch/09909/smata/induction_modeling/gaussian_process/10MW/results/annulus_OH',
             max_depth               = 4,                    # How deep to run the search.
             random_order            = False,                # Randomize the order of the datasets?

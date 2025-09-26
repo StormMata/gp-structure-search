@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks=104
-#SBATCH --time=48:00:00
-#SBATCH -J 10MW_rot_D5_OH
+#SBATCH --time=16:00:00
+#SBATCH -J 10MW_rot_D5
 #SBATCH --account=TG-ATM170028
 #SBATCH -p spr
 #SBATCH --mail-type=ALL

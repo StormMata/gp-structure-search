@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks=104
-#SBATCH --time=24:00:00
+#SBATCH --time=36:00:00
 #SBATCH -J 10MW_rot_D4_OH
 #SBATCH --account=TG-ATM170028
 #SBATCH -p spr

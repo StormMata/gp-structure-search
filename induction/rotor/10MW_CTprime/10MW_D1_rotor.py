@@ -3,9 +3,9 @@
 Experiment( description             = '10MW turbine data in rotor-average form',
             # data_dir                = '/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/induction_modeling/gaussian_process/10MW/train_data/wrf_10MW_rot.mat',
             # results_dir             = '/Users/stormmata/Library/Mobile Documents/com~apple~CloudDocs/Courses/Research/Code/induction_modeling/gaussian_process/10MW/results/rotor',
-            data_dir                = '/scratch/09909/smata/induction_modeling/gaussian_process/10MW/train_data/wrf_10MW_rot.mat',
-            results_dir             = '/scratch/09909/smata/induction_modeling/gaussian_process/10MW/results/rotor_its',
-            max_depth               = 3,                    # How deep to run the search.
+            data_dir                = '/scratch/09909/smata/induction_modeling/gaussian_process/10MW/train_data/wrf_10MW_rot_CTp.mat',
+            results_dir             = '/scratch/09909/smata/induction_modeling/gaussian_process/10MW/results/rotor_CTp',
+            max_depth               = 1,                    # How deep to run the search.
             random_order            = False,                # Randomize the order of the datasets?
             k                       = 1,                    # Keep the k best kernels at every iteration.  1 => greedy search.
             debug                   = False,
